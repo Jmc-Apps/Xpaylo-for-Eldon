@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#071a35" />
+  <meta name="description" content="XPaylo for Eldon — generate and compare draft employee payslips from Excel payroll pay grids." />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>XPaylo for Eldon</title>
+</head>
+<body>
+  <div class="app-frame">
+    <aside class="sidebar" aria-label="App navigation">
+      <div class="sidebar-brand">
+        <img src="assets/xpaylo-logo.png" alt="XPaylo for Eldon logo" class="sidebar-logo" />
+        <div class="sidebar-brand-copy">
+          <strong>XPaylo</strong>
+          <span>for Eldon</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav" aria-label="XPaylo tabs">
+        <div class="nav-group-label">TOOLS</div>
+        <button class="nav-tab active" type="button" data-tab="payslip-generator" aria-current="page" title="Payslip Generator">
+          <span class="nav-icon" aria-hidden="true">▤</span>
+          <span class="nav-text">Payslip Generator</span>
+        </button>
+        <button class="nav-tab" type="button" data-tab="payslip-comparison" title="Payslip Comparison">
+          <span class="nav-icon" aria-hidden="true">⇄</span>
+          <span class="nav-text">Payslip Comparison</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <span class="version-badge">v1.1.0</span>
+      </div>
+    </aside>
+
+    <div class="main-area">
+      <header class="app-header">
+        <div>
+          <h1 id="pageTitle">Payslip Generator</h1>
+          <p id="pageSubtitle">Excel pay grid to one combined draft payslip PDF</p>
+        </div>
+        <button id="installBtn" class="button button-secondary header-install hidden" type="button">Install App</button>
+      </header>
+
+      <main class="app-shell">
+        <section class="tab-panel active" data-tab-panel="payslip-generator">
+          <section class="card upload-card">
+            <div>
+              <h2>1. Upload payroll pay grid</h2>
+              <p>Select an <strong>.xlsx</strong> payroll pay-grid workbook. The file is processed locally in your browser and is not uploaded anywhere.</p>
+            </div>
+            <label class="drop-zone" id="dropZone" for="fileInput">
+              <input id="fileInput" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+              <span class="drop-icon">⇧</span>
+              <strong>Choose Excel file</strong>
+              <span>or drag and drop it here</span>
+            </label>
+            <div id="fileStatus" class="status neutral">No pay grid loaded.</div>
+          </section>
+
+          <section id="summaryCard" class="card hidden">
+            <div class="section-heading">
+              <div>
+                <h2>2. Review employees</h2>
+                <p id="payrollMeta">Payroll details</p>
+              </div>
+              <div class="toolbar">
+                <button id="selectAllBtn" class="button button-secondary" type="button">Select All</button>
+                <button id="clearAllBtn" class="button button-secondary" type="button">Clear All</button>
+                <button id="clearPayrollBtn" class="button button-danger" type="button">Clear Payroll</button>
+              </div>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat"><span>Employees found</span><strong id="employeeCount">0</strong></div>
+              <div class="stat"><span>Selected</span><strong id="selectedCount">0</strong></div>
+              <div class="stat"><span>Period end</span><strong id="periodEnd">####</strong></div>
+              <div class="stat"><span>Output</span><strong>1 PDF</strong></div>
+            </div>
+
+            <div class="table-wrap">
+              <table class="employee-table">
+                <thead>
+                  <tr>
+                    <th class="check-col"></th>
+                    <th>Employee</th>
+                    <th>Code</th>
+                    <th class="num">Gross Pay</th>
+                    <th class="num">Deductions</th>
+                    <th class="num">Nett Pay</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="employeeRows"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="previewCard" class="card hidden">
+            <div class="section-heading">
+              <div>
+                <h2>3. Payslip preview</h2>
+                <p id="previewTitle">Preview</p>
+              </div>
+            </div>
+            <div id="payslipPreview" class="preview-stage"></div>
+          </section>
+
+          <section id="generateCard" class="card hidden">
+            <div class="section-heading generate-heading">
+              <div>
+                <h2>4. Generate combined PDF</h2>
+                <p>Every selected employee is placed on a separate A4 landscape page with a large DRAFT watermark.</p>
+              </div>
+              <button id="generateBtn" class="button button-primary button-large" type="button">Generate Payslips PDF</button>
+            </div>
+            <div class="rules-note">
+              <strong>Missing information rule:</strong> where a payslip field is not available from the pay grid, the description remains visible and its value is shown as <code>####</code>.
+            </div>
+          </section>
+        </section>
+
+        <section class="tab-panel" data-tab-panel="payslip-comparison">
+          <section class="card upload-card">
+            <div>
+              <h2>1. Upload this month and last month</h2>
+              <p>Load both payroll pay grids. Employees are matched by employee code. All processing remains on this device.</p>
+            </div>
+
+            <div class="comparison-upload-grid">
+              <div class="comparison-upload-column">
+                <h3>This month's pay grid</h3>
+                <label class="drop-zone compact-drop" id="currentDropZone" for="currentMonthInput">
+                  <input id="currentMonthInput" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                  <span class="drop-icon">⇧</span>
+                  <strong>Choose this month's .xlsx</strong>
+                  <span>or drag and drop it here</span>
+                </label>
+                <div id="currentMonthStatus" class="status neutral">Not loaded.</div>
+              </div>
+              <div class="comparison-upload-column">
+                <h3>Last month's pay grid</h3>
+                <label class="drop-zone compact-drop" id="previousDropZone" for="previousMonthInput">
+                  <input id="previousMonthInput" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+                  <span class="drop-icon">⇧</span>
+                  <strong>Choose last month's .xlsx</strong>
+                  <span>or drag and drop it here</span>
+                </label>
+                <div id="previousMonthStatus" class="status neutral">Not loaded.</div>
+              </div>
+            </div>
+
+            <div class="comparison-settings">
+              <div>
+                <label for="comparisonThreshold"><strong>Difference alert threshold</strong></label>
+                <p>If the absolute change from last month is greater than this percentage, the line description is shown in red.</p>
+              </div>
+              <div class="threshold-control">
+                <input id="comparisonThreshold" type="number" min="0" max="9999" step="0.1" value="10" inputmode="decimal" aria-label="Comparison difference threshold percentage" />
+                <span>%</span>
+              </div>
+            </div>
+            <div id="comparisonStatus" class="status neutral">Load both pay grids to begin the comparison.</div>
+          </section>
+
+          <section id="comparisonSummaryCard" class="card hidden">
+            <div class="section-heading">
+              <div>
+                <h2>2. Review comparison</h2>
+                <p id="comparisonMeta">Payroll comparison details</p>
+              </div>
+              <div class="toolbar">
+                <button id="comparisonSelectAllBtn" class="button button-secondary" type="button">Select All</button>
+                <button id="comparisonClearAllBtn" class="button button-secondary" type="button">Clear All</button>
+                <button id="clearComparisonBtn" class="button button-danger" type="button">Clear Comparison</button>
+              </div>
+            </div>
+
+            <div class="stats-grid comparison-stats">
+              <div class="stat"><span>This month employees</span><strong id="comparisonEmployeeCount">0</strong></div>
+              <div class="stat"><span>Matched last month</span><strong id="comparisonMatchedCount">0</strong></div>
+              <div class="stat"><span>No prior match</span><strong id="comparisonUnmatchedCount">0</strong></div>
+              <div class="stat"><span>Alert threshold</span><strong id="comparisonThresholdDisplay">10%</strong></div>
+            </div>
+
+            <div class="table-wrap">
+              <table class="employee-table comparison-table">
+                <thead>
+                  <tr>
+                    <th class="check-col"></th>
+                    <th>Employee</th>
+                    <th>Code</th>
+                    <th class="num">This Month Gross</th>
+                    <th class="num">Last Month Gross</th>
+                    <th class="num">Change</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="comparisonEmployeeRows"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="comparisonPreviewCard" class="card hidden">
+            <div class="section-heading">
+              <div>
+                <h2>3. Comparison payslip preview</h2>
+                <p id="comparisonPreviewTitle">Preview</p>
+              </div>
+            </div>
+            <div class="comparison-legend">
+              <span><i class="legend-prior"></i> Grey figure = last month</span>
+              <span><i class="legend-alert"></i> Red description = difference above threshold</span>
+            </div>
+            <div id="comparisonPayslipPreview" class="preview-stage"></div>
+          </section>
+
+          <section id="comparisonGenerateCard" class="card hidden">
+            <div class="section-heading generate-heading">
+              <div>
+                <h2>4. Generate comparison PDF</h2>
+                <p>One combined A4 landscape PDF is generated, with one comparison payslip per selected employee.</p>
+              </div>
+              <button id="generateComparisonBtn" class="button button-primary button-large" type="button">Generate Comparison PDF</button>
+            </div>
+            <div class="rules-note">
+              <strong>Comparison rule:</strong> this month's figures remain the main figures. Last month's matching figures appear beside them in grey. Missing prior-month values are shown as <code>####</code>.
+            </div>
+          </section>
+        </section>
+      </main>
+
+      <footer>
+        XPaylo for Eldon v1.1.0 · Offline-capable PWA · Payroll data stays on this device
+      </footer>
+    </div>
+  </div>
+
+  <script defer src="pako_inflate.min.js"></script>
+  <script defer src="app.js"></script>
+</body>
+</html>
