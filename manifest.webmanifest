@@ -1,4 +1,5 @@
 {
+  "id": "./",
   "name": "XPaylo for Eldon",
   "short_name": "XPaylo",
   "description": "Generate and compare draft employee payslips from Excel payroll pay grids.",

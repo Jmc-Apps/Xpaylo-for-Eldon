@@ -21,11 +21,8 @@ body { margin: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, B
 button, input { font: inherit; }
 .app-frame { min-height: 100vh; }
 .sidebar { position: fixed; inset: 0 auto 0 0; z-index: 50; width: var(--sidebar); padding: 18px 14px 16px; background: linear-gradient(180deg, var(--navy), #06152b); color: #fff; display: flex; flex-direction: column; box-shadow: 5px 0 20px rgba(7,26,53,.15); }
-.sidebar-brand { display: flex; align-items: center; gap: 10px; padding: 2px 4px 18px; border-bottom: 1px solid rgba(255,255,255,.12); }
-.sidebar-logo { width: 88px; height: 88px; object-fit: contain; flex: 0 0 auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,.22)); }
-.sidebar-brand-copy { min-width: 0; line-height: 1.05; }
-.sidebar-brand-copy strong { display: block; font-size: 1.32rem; letter-spacing: -.025em; }
-.sidebar-brand-copy span { display: block; margin-top: 5px; color: #b9ff92; font-weight: 800; font-size: .92rem; }
+.sidebar-brand { display: flex; align-items: center; justify-content: center; padding: 2px 0 18px; border-bottom: 1px solid rgba(255,255,255,.12); }
+.sidebar-logo { width: 176px; height: 176px; object-fit: contain; flex: 0 0 auto; filter: drop-shadow(0 6px 12px rgba(0,0,0,.25)); }
 .sidebar-nav { padding-top: 18px; display: grid; gap: 8px; }
 .nav-group-label { padding: 0 12px 4px; font-size: .68rem; font-weight: 800; letter-spacing: .12em; color: #8292aa; }
 .nav-tab { width: 100%; min-height: 50px; border: 1px solid transparent; border-radius: 11px; padding: 9px 12px; display: flex; align-items: center; gap: 11px; text-align: left; cursor: pointer; background: transparent; color: #d9e2ef; font-weight: 750; transition: .14s ease; }
@@ -110,8 +107,8 @@ footer { text-align: center; padding: 0 14px 34px; color: #6b7280; font-size: .8
   :root { --sidebar: 88px; }
   .sidebar { padding-left: 9px; padding-right: 9px; }
   .sidebar-brand { justify-content: center; padding-left: 0; padding-right: 0; }
-  .sidebar-logo { width: 66px; height: 66px; }
-  .sidebar-brand-copy, .nav-group-label, .nav-text { display: none; }
+  .sidebar-logo { width: 72px; height: 72px; }
+  .nav-group-label, .nav-text { display: none; }
   .nav-tab { justify-content: center; padding: 9px; }
   .nav-icon { width: 38px; height: 38px; }
   .sidebar-footer { text-align: center; padding-left: 0; padding-right: 0; }
@@ -126,7 +123,7 @@ footer { text-align: center; padding: 0 14px 34px; color: #6b7280; font-size: .8
 }
 @media (max-width: 520px) {
   :root { --sidebar: 72px; }
-  .sidebar-logo { width: 56px; height: 56px; }
+  .sidebar-logo { width: 60px; height: 60px; }
   .nav-icon { width: 36px; height: 36px; }
   .app-header { padding-left: 14px; padding-right: 14px; }
   .header-install { padding: 8px 9px; font-size: .82rem; }

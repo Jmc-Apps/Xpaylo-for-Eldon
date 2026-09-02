@@ -1,4 +1,4 @@
-const CACHE = 'xpaylo-for-eldon-v1.1.0';
+const CACHE = 'xpaylo-for-eldon-v1.1.1';
 const APP_SHELL = [
   './',
   './index.html',
@@ -10,7 +10,8 @@ const APP_SHELL = [
   './assets/xpaylo-logo.png',
   './icons/favicon.png',
   './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icons/icon-512.png',
+  './icons/apple-touch-icon.png'
 ];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));

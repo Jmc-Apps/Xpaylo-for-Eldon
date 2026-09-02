@@ -1,4 +1,4 @@
-# XPaylo for Eldon v1.1.0
+# XPaylo for Eldon v1.1.1
 
 Offline-capable PWA for producing draft payslips from the Eldon payroll pay grid.
 
@@ -23,3 +23,9 @@ Offline-capable PWA for producing draft payslips from the Eldon payroll pay grid
 
 ## Privacy
 Payroll workbooks are processed in the browser. XPaylo does not upload payroll data to a server.
+
+
+## v1.1.1 changes
+- Sidebar XPaylo logo is now twice the previous desktop size.
+- Removed the adjacent “XPaylo for Eldon” text from the sidebar; the logo is now the sole branding element there.
+- Refreshed the PWA icon files directly from the approved XPaylo logo and added a dedicated Apple touch icon so installed web apps use the XPaylo logo.
