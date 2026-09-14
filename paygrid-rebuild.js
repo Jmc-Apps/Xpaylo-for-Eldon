@@ -155,15 +155,63 @@
     'DLOANUNIFORM1':'UNIFORM1',
     'DLOANUNIFORM2':'UNIFORM2'
   };
-  function mapRange(desc,range){
-    let k=cleanKey(desc);
+  function deductionKey(value){
+    // D- is the Pay Grid category prefix for a deduction, not part of the
+    // human-readable payslip description. Normalize both sides without it.
+    let v=norm(value).replace(/^D\s*-\s*/,'');
+    let k=v.replace(/[^A-Z0-9]/g,'');
     k=PAYSLIP_KEY_ALIASES[k]||k;
+    return k;
+  }
+  function rangeKey(value,range){
+    if(range===ranges.ded)return deductionKey(value);
+    let k=cleanKey(value);
+    k=PAYSLIP_KEY_ALIASES[k]||k;
+    return k;
+  }
+  function mapRange(desc,range){
+    const k=rangeKey(desc,range);
     let exact=null;
     for(let i=range[0];i<=range[1];i++){
-      let hk=cleanKey(HEADERS[i]); hk=PAYSLIP_KEY_ALIASES[hk]||hk;
+      const hk=rangeKey(HEADERS[i],range);
       if(hk===k)exact=i;
     }
     return exact;
+  }
+  function lineDescriptionForMapping(line){
+    const positioned=leftDescription(line);
+    if(positioned)return positioned;
+    return String(line?.text||'').trim();
+  }
+  function stripTrailingPrintedValues(text){
+    let out=String(text||'').replace(/\s+/g,' ').trim();
+    // Some payroll PDFs flatten a complete row into one text object, e.g.
+    // "OTHER RECOVERY 524.88" or "NORMAL PAY 176.87 14,000.00".
+    // Remove only trailing decimal-form payroll values so digits that are part
+    // of a real description (UNIFORM 1, 3PTY, SANLAM G-4000) stay intact.
+    for(let n=0;n<3;n++){
+      const next=out.replace(/\s+-?\d[\d,]*[.,]\d{1,2}\s*$/,'').trim();
+      if(next===out)break;
+      out=next;
+    }
+    return out;
+  }
+  function printedLineAmount(line,xMin=0){
+    const positioned=rightNumber(line,xMin);
+    if(positioned!=null)return positioned;
+    const text=String(line?.text||'').replace(/\s+/g,' ').trim();
+    const matches=[...text.matchAll(/-?\d[\d,]*[.,]\d{1,2}/g)];
+    if(!matches.length)return null;
+    return num(matches[matches.length-1][0]);
+  }
+  function mapPrintedLine(line,range){
+    const positioned=lineDescriptionForMapping(line);
+    let idx=mapRange(positioned,range);
+    if(idx==null){
+      const stripped=stripTrailingPrintedValues(line?.text||positioned);
+      idx=mapRange(stripped,range);
+    }
+    return {idx,amount:printedLineAmount(line,0)};
   }
   function parsePayslipPage(items,pageNo){
     const lines=linesFromItems(items), row=Array(HEADERS.length).fill(null), warnings=[];
@@ -190,17 +238,17 @@
     row[5]=null; // Overtime 2 is not separately printed.
 
     const earn=section(lines,'EARNINGS',['DEDUCTIONS','COMPANY CONTRIBUTIONS','Nett Pay:','YEAR-TO-DATE TOTALS']); let earnTotal=null;
-    for(const l of earn){const d=leftDescription(l); if(!d)continue; if(norm(d)==='HOURS')continue; if(norm(d)==='TOTAL'){earnTotal=rightNumber(l,0);continue;} const idx=mapRange(d,ranges.earn); if(idx!=null){const amt=rightNumber(l,0); if(amt!=null)row[idx]=amt;}}
+    for(const l of earn){const d=leftDescription(l); if(!d)continue; if(norm(d)==='HOURS')continue; if(norm(d)==='TOTAL'){earnTotal=rightNumber(l,0);continue;} const mapped=mapPrintedLine(l,ranges.earn); if(mapped.idx!=null&&mapped.amount!=null)row[mapped.idx]=mapped.amount;}
     if(earnTotal==null){const vals=[];for(let i=ranges.earn[0];i<ranges.earn[1];i++)if(Number.isFinite(row[i])&&i!==16)vals.push(row[i]); if(vals.length)earnTotal=vals.reduce((a,b)=>a+b,0);}
     if(earnTotal!=null){row[16]=earnTotal;row[46]=earnTotal;row[54]=earnTotal;}
 
     const ded=section(lines,'DEDUCTIONS',['COMPANY CONTRIBUTIONS','Nett Pay:','YEAR-TO-DATE TOTALS']); let dedTotal=null;
-    for(const l of ded){const d=leftDescription(l); if(!d)continue; if(norm(d)==='TOTAL'){dedTotal=rightNumber(l,0);continue;} const idx=mapRange(d,ranges.ded); if(idx!=null){const v=rightNumber(l,0);if(v!=null)row[idx]=v;}}
+    for(const l of ded){const d=leftDescription(l); if(!d)continue; if(norm(d)==='TOTAL'){dedTotal=rightNumber(l,0);continue;} const mapped=mapPrintedLine(l,ranges.ded); if(mapped.idx!=null&&mapped.amount!=null)row[mapped.idx]=mapped.amount;}
     if(dedTotal==null){const vals=[];for(let i=ranges.ded[0];i<ranges.ded[1];i++)if(Number.isFinite(row[i]))vals.push(row[i]); if(vals.length)dedTotal=vals.reduce((a,b)=>a+b,0);}
     if(dedTotal!=null)row[100]=dedTotal;
 
     const cc=section(lines,'COMPANY CONTRIBUTIONS',['Nett Pay:','YEAR-TO-DATE TOTALS']); let ccTotal=null;
-    for(const l of cc){const d=leftDescription(l); if(!d)continue; if(norm(d)==='TOTAL'){ccTotal=rightNumber(l,0);continue;} const idx=mapRange(d,ranges.cc); if(idx!=null){const v=rightNumber(l,0);if(v!=null)row[idx]=v;}}
+    for(const l of cc){const d=leftDescription(l); if(!d)continue; if(norm(d)==='TOTAL'){ccTotal=rightNumber(l,0);continue;} const mapped=mapPrintedLine(l,ranges.cc); if(mapped.idx!=null&&mapped.amount!=null)row[mapped.idx]=mapped.amount;}
     if(ccTotal==null){const vals=[];for(let i=ranges.cc[0];i<ranges.cc[1];i++)if(Number.isFinite(row[i]))vals.push(row[i]); if(vals.length)ccTotal=vals.reduce((a,b)=>a+b,0);}
     if(ccTotal!=null)row[125]=ccTotal;
 

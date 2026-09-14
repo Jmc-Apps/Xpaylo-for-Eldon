@@ -1,4 +1,4 @@
-# XPaylo for Eldon v1.2.4
+# XPaylo for Eldon v1.2.5
 
 Offline-capable PWA for producing and comparing draft payslips and rebuilding a Pay Grid from payslip PDFs.
 
@@ -25,11 +25,11 @@ Offline-capable PWA for producing and comparing draft payslips and rebuilding a 
 - Keeps the original 127 Pay Grid columns and appends XPaylo comparison metadata columns for YTD and leave figures present on payslips.
 - Uncertain records are flagged for review instead of guessed.
 
-## v1.2.4 changes
-- Fixed Basic Salary for fixed-monthly employees: when PAY RATE equals NORMAL PAY to the nearest cent, Basic Salary equals PAY RATE; otherwise the existing PAY RATE x 195 calculation remains.
-- Applies the Basic Salary rule independently to current and previous months in Payslip Comparison.
-- Normalizes `LOAN UNIFORM 1` / `D-LOAN UNIFORM 1` and `UNIFORM 1` / `D-UNIFORM 1` as one deduction item, with the same handling for Uniform 2.
-- Payslip Comparison now shows one Uniform deduction row with current and previous values side by side instead of duplicate alias rows.
+## v1.2.5 changes
+- Generalized deduction matching so the Pay Grid `D-` prefix is treated as a deduction category prefix rather than part of the payslip description.
+- Payslip `OTHER RECOVERY` now maps to Pay Grid `D-OTHER RECOVERY`, and the same rule applies across the deduction section instead of relying on one-off aliases.
+- Made PDF payroll-row parsing more tolerant when a description and amount are flattened into one PDF text object, while preserving numbers that are genuinely part of descriptions such as `UNIFORM 1`, `3PTY`, and `SANLAM G-4000`.
+- Retains the fixed-monthly Basic Salary logic and Uniform alias normalization from the previous build.
 
 ## Privacy
 Payroll workbooks and PDFs are processed in the browser. XPaylo does not upload payroll data to a server.
