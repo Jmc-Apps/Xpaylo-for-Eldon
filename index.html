@@ -240,7 +240,7 @@
           <section class="card upload-card">
             <div>
               <h2>1. Upload payslip PDF</h2>
-              <p>Choose a text-based PDF containing the payroll payslips. A payslip may span one or more pages; XPaylo groups continuation pages for the same employee and rebuilds the known Pay Grid columns from the information printed across the complete payslip.</p>
+              <p>Choose a text-based PDF containing the payroll payslips, with one employee payslip per page. XPaylo rebuilds the known Pay Grid columns from the information printed on each payslip.</p>
             </div>
             <label class="drop-zone" id="payslipPdfDropZone" for="payslipPdfInput">
               <input id="payslipPdfInput" type="file" accept=".pdf,application/pdf" />
@@ -268,7 +268,7 @@
               <div class="stat"><span>PDF pages</span><strong id="payGridPageCount">0</strong></div>
               <div class="stat"><span>Ready</span><strong id="payGridReadyCount">0</strong></div>
               <div class="stat"><span>Needs review</span><strong id="payGridWarningCount">0</strong></div>
-              <div class="stat"><span>Failed payslips</span><strong id="payGridFailedCount">0</strong></div>
+              <div class="stat"><span>Failed pages</span><strong id="payGridFailedCount">0</strong></div>
             </div>
 
             <div class="table-wrap">
@@ -276,7 +276,7 @@
                 <thead>
                   <tr>
                     <th class="check-col"></th>
-                    <th>Pages</th>
+                    <th>Page</th>
                     <th>Employee</th>
                     <th>Code</th>
                     <th class="num">Gross Pay</th>
@@ -308,7 +308,7 @@
       </main>
 
       <footer>
-        XPaylo for Eldon v1.2.1 · Offline-capable PWA · Payroll data stays on this device
+        XPaylo for Eldon v1.2.0 · Offline-capable PWA · Payroll data stays on this device
       </footer>
     </div>
   </div>

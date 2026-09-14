@@ -89,9 +89,44 @@
     const cand=items.filter(i=>i.x>=Math.max(xMin,l.x)&&Math.abs(i.y-l.y)<3&&num(i.text)!=null).sort((a,b)=>a.x-b.x);
     return cand.length?num(cand[0].text):null;
   }
+  const FIELD_LABELS = [
+    'Co. Name','Co. Address','Period EndDate','Printed Date','Pay slip','Payment Dt',
+    'Employee Code','Employee Name','Employee Address','Department','Job Title','Date Engaged',
+    'Account Number','Branch Code','ID Number','Tax Number','Contact Person','Contact Email',
+    'Contact Number','Bank'
+  ];
+  const fieldLabelPattern=FIELD_LABELS.map(v=>v.replace(/[.*+?^${}()|[\]\\]/g,'\\$&').replace(/\\ /g,'\\s*')).join('|');
+  const nextLabel=new RegExp('\\s+(?:'+fieldLabelPattern+')\\s*:?', 'i');
   function fieldFromLines(lines,label){
-    const nextLabel=/\s+(?:Co\.\s*Name|Co\.\s*Address|Period\s*EndDate|Printed\s*Date|Pay\s*slip|Payment\s*Dt|Employee\s*Code|Employee\s*Name|Employee\s*Address|Department|Job\s*Title|Date\s*Engaged|Account\s*Number|Branch\s*Code|ID\s*Number|Tax\s*Number)\s*:?/i;
-    for(const l of lines){const t=l.text; const i=norm(t).indexOf(norm(label)); if(i>=0){let v=t.slice(i+String(label).length).replace(/^\s*:?\s*/,'').trim(); const cut=v.search(nextLabel); if(cut>=0)v=v.slice(0,cut).trim(); if(v)return v;}} return null;
+    for(const l of lines){
+      const t=l.text; const i=norm(t).indexOf(norm(label));
+      if(i<0)continue;
+      let v=t.slice(i+String(label).length).replace(/^\s*:?\s*/,'').trim();
+      const cut=v.search(nextLabel); if(cut>=0)v=v.slice(0,cut).trim();
+      if(v)return v;
+    }
+    return null;
+  }
+  function cleanIdentityText(value){
+    let v=String(value||'').replace(/\s+/g,' ').trim();
+    if(!v)return '';
+    const cut=v.search(nextLabel); if(cut>=0)v=v.slice(0,cut).trim();
+    return v.replace(/^[:\-\s]+|[:\-\s]+$/g,'').trim();
+  }
+  function cleanEmployeeCode(value){
+    const v=cleanIdentityText(value).toUpperCase();
+    if(!v)return '';
+    // Employee codes in the source grids are compact alphanumeric identifiers.
+    // Take only the first valid identifier so adjacent PDF columns can never bleed into EMP Name.
+    const m=v.match(/^[A-Z0-9][A-Z0-9._\/-]{2,24}/);
+    return m?m[0]:'';
+  }
+  function cleanEmployeeName(value){
+    let v=cleanIdentityText(value);
+    if(!v)return '';
+    // Defensive stop for PDFs that flatten the right-hand contact panel onto the same text line.
+    v=v.replace(/\s+(?:CONTACT\s+(?:PERSON|EMAIL|NUMBER)|DEPARTMENT|BANK|ACCOUNT\s+NUMBER|BRANCH\s+CODE)\s*:.*$/i,'').trim();
+    return v;
   }
   function periodDate(lines){for(const l of lines){let m=l.text.match(/(?:Pay slip|Period EndDate)\s*:?[ ]*(\d{1,2}[ -][A-Za-z]{3}[ -]\d{4})/i); if(m)return m[1];}return null;}
   function dateInfo(s){if(!s)return {month:'',year:'',taxYear:''}; const m=s.match(/(\d{1,2})[ -]([A-Za-z]{3})[ -](\d{4})/); if(!m)return {month:'',year:'',taxYear:''}; const d=new Date(`${m[2]} ${m[1]}, ${m[3]}`); const month=d.toLocaleString('en',{month:'long'}); const y=Number(m[3]); return {month,year:y,taxYear:d.getMonth()+1>=2?y+1:y};}
@@ -102,7 +137,7 @@
   function mapRange(desc,range){const k=cleanKey(desc); let exact=null; for(let i=range[0];i<=range[1];i++){const hk=cleanKey(HEADERS[i]); if(hk===k)exact=i;} return exact;}
   function parsePayslipPage(items,pageNo){
     const lines=linesFromItems(items), row=Array(127).fill(null), warnings=[];
-    const code=fieldFromLines(lines,'Employee Code'); const name=fieldFromLines(lines,'Employee Name'); const pdate=periodDate(lines);
+    const code=cleanEmployeeCode(fieldFromLines(lines,'Employee Code')); const name=cleanEmployeeName(fieldFromLines(lines,'Employee Name')); const pdate=periodDate(lines);
     if(name&&code)row[0]=`${name} (${code})`;
     const rate=nearestValue(items,'Rate:',100); if(rate!=null)row[9]=rate;
     const clockMap={'NORMAL':1,'SUNDAY':2,'OFF DAY':3,'OVERTIME':4,'HOLIDAY':6,'NIGHTSHIFT':7,'TOTAL HOURS':8};
