@@ -1,4 +1,4 @@
-const VERSION = '1.1.0';
+const VERSION = globalThis.XPAYLO_VERSION || 'dev';
 const MISSING = '####';
 
 // -----------------------------
@@ -208,7 +208,7 @@ async function parsePayrollWorkbook(arrayBuffer) {
 
 const CATEGORY_NAMES = new Set([
   'MANDATORY', 'T/A', 'EARNINGS', 'REIMBURSEMENTS', 'GROSS PAYMENT', 'DEDUCTIONS',
-  'NETT SALARY', 'FRINGE BENEFITS', 'COMPANY CONTRIBUTIONS', 'COST TO COMPANY'
+  'NETT SALARY', 'FRINGE BENEFITS', 'COMPANY CONTRIBUTIONS', 'COST TO COMPANY', 'XPAYLO'
 ]);
 
 function cell(rows, r, c) { return rows.get(r)?.get(c) ?? null; }
@@ -391,6 +391,17 @@ function extractPayroll(rows, sheetName) {
       companyTotal,
       nett,
       payRate: getNum('PAY RATE', 'EARNINGS'),
+      ytd: {
+        taxableEarnings: getNum('XPaylo YTD Taxable Earnings'),
+        perks: getNum('XPaylo YTD Perks'),
+        tax: getNum('XPaylo YTD Tax')
+      },
+      leave: {
+        annual: getNum('XPaylo Leave Annual'),
+        grace: getNum('XPaylo Leave Grace'),
+        access: getNum('XPaylo Leave Access'),
+        due: getNum('XPaylo Leave Days Due')
+      },
       clocked: {
         normal: getNum('Normal', 'T/A'),
         sunday: getNum('Sunday', 'T/A'),
@@ -463,6 +474,17 @@ function payslipViewModel(employee, payroll) {
     nettText: money(employee.nett),
     payRateText: money(employee.payRate),
     basicSalaryText: Number.isFinite(employee.payRate) ? money(employee.payRate * 195) : MISSING,
+    ytd: {
+      taxableEarnings: money(employee.ytd?.taxableEarnings),
+      perks: money(employee.ytd?.perks),
+      tax: money(employee.ytd?.tax)
+    },
+    leave: {
+      annual: Number.isFinite(employee.leave?.annual) ? employee.leave.annual.toFixed(2) : MISSING,
+      grace: Number.isFinite(employee.leave?.grace) ? employee.leave.grace.toFixed(2) : MISSING,
+      access: Number.isFinite(employee.leave?.access) ? employee.leave.access.toFixed(2) : MISSING,
+      due: Number.isFinite(employee.leave?.due) ? employee.leave.due.toFixed(2) : MISSING
+    },
     clocked: {
       normal: hours(employee.clocked.normal),
       sunday: hours(employee.clocked.sunday),
@@ -491,8 +513,8 @@ function renderPreview(employee, payroll) {
     </div>
     <div class="net-pay"><span>Nett Pay:</span><span>${esc(p.nettText)}</span></div>
     <div class="bottom-grid">
-      ${bottomBox('YEAR-TO-DATE TOTALS',[['Taxable Earnings:',MISSING],['Perks:',MISSING],['Tax:',MISSING],['Rate:',p.payRateText],['Basic Salary:',p.basicSalaryText]])}
-      ${bottomBox('LEAVE DETAILS',[['Annual:',MISSING],['Grace:',MISSING],['Access:',MISSING],['Leave Days Due:',MISSING]])}
+      ${bottomBox('YEAR-TO-DATE TOTALS',[['Taxable Earnings:',p.ytd.taxableEarnings],['Perks:',p.ytd.perks],['Tax:',p.ytd.tax],['Rate:',p.payRateText],['Basic Salary:',p.basicSalaryText]])}
+      ${bottomBox('LEAVE DETAILS',[['Annual:',p.leave.annual],['Grace:',p.leave.grace],['Access:',p.leave.access],['Leave Days Due:',p.leave.due]])}
       ${bottomBox('CLOCKED HOURS',[['Normal:',p.clocked.normal],['Sunday:',p.clocked.sunday],['Off Day:',p.clocked.offDay],['Holiday:',p.clocked.holiday],['Nightshift:',p.clocked.nightshift],['Overtime:',p.clocked.overtime],['Total Hours:',p.clocked.total]])}
     </div>
   </div>`;
@@ -646,10 +668,10 @@ function pdfContentForPayslip(employee, payroll) {
 
   const bottomTop=409, bottomH=171;
   keyValueBox(margin,bottomTop,tableW,bottomH,'YEAR-TO-DATE TOTALS',[
-    ['Taxable Earnings:',MISSING],['Perks:',MISSING],['Tax:',MISSING],['Rate:',p.payRateText],['Basic Salary:',p.basicSalaryText]
+    ['Taxable Earnings:',p.ytd.taxableEarnings],['Perks:',p.ytd.perks],['Tax:',p.ytd.tax],['Rate:',p.payRateText],['Basic Salary:',p.basicSalaryText]
   ]);
   keyValueBox(margin+tableW+gap,bottomTop,tableW,bottomH,'LEAVE DETAILS',[
-    ['Annual:',MISSING],['Grace:',MISSING],['Access:',MISSING],['Leave Days Due:',MISSING]
+    ['Annual:',p.leave.annual],['Grace:',p.leave.grace],['Access:',p.leave.access],['Leave Days Due:',p.leave.due]
   ]);
   keyValueBox(margin+(tableW+gap)*2,bottomTop,tableW,bottomH,'CLOCKED HOURS',[
     ['Normal:',p.clocked.normal],['Sunday:',p.clocked.sunday],['Off Day:',p.clocked.offDay],['Holiday:',p.clocked.holiday],['Nightshift:',p.clocked.nightshift],['Overtime:',p.clocked.overtime],['Total Hours:',p.clocked.total]
@@ -844,17 +866,17 @@ function renderComparisonPreview(currentEmployee, previousEmployee, currentPayro
     <div class="net-pay"><span class="${netChanged ? 'comparison-alert-on-dark' : ''}">Nett Pay:</span><span>${esc(p.nettText)} <span class="prior-value prior-on-dark">${esc(q ? q.nettText : MISSING)}</span></span></div>
     <div class="bottom-grid">
       ${bottomComparisonBox('YEAR-TO-DATE TOTALS',[
-        {label:'Taxable Earnings:',current:MISSING,previous:MISSING,changed:false},
-        {label:'Perks:',current:MISSING,previous:MISSING,changed:false},
-        {label:'Tax:',current:MISSING,previous:MISSING,changed:false},
+        row('Taxable Earnings:',p.ytd.taxableEarnings,q ? q.ytd.taxableEarnings : MISSING,currentEmployee.ytd?.taxableEarnings ?? null,previousEmployee?.ytd?.taxableEarnings ?? null),
+        row('Perks:',p.ytd.perks,q ? q.ytd.perks : MISSING,currentEmployee.ytd?.perks ?? null,previousEmployee?.ytd?.perks ?? null),
+        row('Tax:',p.ytd.tax,q ? q.ytd.tax : MISSING,currentEmployee.ytd?.tax ?? null,previousEmployee?.ytd?.tax ?? null),
         row('Rate:',p.payRateText,q ? q.payRateText : MISSING,currentEmployee.payRate,ratePrev),
         row('Basic Salary:',p.basicSalaryText,q ? q.basicSalaryText : MISSING,basicCurrent,basicPrev)
       ])}
       ${bottomComparisonBox('LEAVE DETAILS',[
-        {label:'Annual:',current:MISSING,previous:MISSING,changed:false},
-        {label:'Grace:',current:MISSING,previous:MISSING,changed:false},
-        {label:'Access:',current:MISSING,previous:MISSING,changed:false},
-        {label:'Leave Days Due:',current:MISSING,previous:MISSING,changed:false}
+        row('Annual:',p.leave.annual,q ? q.leave.annual : MISSING,currentEmployee.leave?.annual ?? null,previousEmployee?.leave?.annual ?? null),
+        row('Grace:',p.leave.grace,q ? q.leave.grace : MISSING,currentEmployee.leave?.grace ?? null,previousEmployee?.leave?.grace ?? null),
+        row('Access:',p.leave.access,q ? q.leave.access : MISSING,currentEmployee.leave?.access ?? null,previousEmployee?.leave?.access ?? null),
+        row('Leave Days Due:',p.leave.due,q ? q.leave.due : MISSING,currentEmployee.leave?.due ?? null,previousEmployee?.leave?.due ?? null)
       ])}
       ${bottomComparisonBox('CLOCKED HOURS',[
         row('Normal:',p.clocked.normal,q ? q.clocked.normal : MISSING,currentEmployee.clocked.normal,previousEmployee?.clocked.normal ?? null),
@@ -1032,17 +1054,17 @@ function pdfContentForComparison(currentEmployee, previousEmployee, currentPayro
 
   const bottomTop=409, bottomH=171;
   keyValueBox(margin,bottomTop,tableW,bottomH,'YEAR-TO-DATE TOTALS',[
-    {label:'Taxable Earnings:',current:MISSING,previous:MISSING,changed:false},
-    {label:'Perks:',current:MISSING,previous:MISSING,changed:false},
-    {label:'Tax:',current:MISSING,previous:MISSING,changed:false},
+    pairRow('Taxable Earnings:',p.ytd.taxableEarnings,q?q.ytd.taxableEarnings:MISSING,currentEmployee.ytd?.taxableEarnings ?? null,previousEmployee?.ytd?.taxableEarnings ?? null),
+    pairRow('Perks:',p.ytd.perks,q?q.ytd.perks:MISSING,currentEmployee.ytd?.perks ?? null,previousEmployee?.ytd?.perks ?? null),
+    pairRow('Tax:',p.ytd.tax,q?q.ytd.tax:MISSING,currentEmployee.ytd?.tax ?? null,previousEmployee?.ytd?.tax ?? null),
     pairRow('Rate:',p.payRateText,q?q.payRateText:MISSING,currentEmployee.payRate,ratePrev),
     pairRow('Basic Salary:',p.basicSalaryText,q?q.basicSalaryText:MISSING,basicCurrent,basicPrev)
   ]);
   keyValueBox(margin+tableW+gap,bottomTop,tableW,bottomH,'LEAVE DETAILS',[
-    {label:'Annual:',current:MISSING,previous:MISSING,changed:false},
-    {label:'Grace:',current:MISSING,previous:MISSING,changed:false},
-    {label:'Access:',current:MISSING,previous:MISSING,changed:false},
-    {label:'Leave Days Due:',current:MISSING,previous:MISSING,changed:false}
+    pairRow('Annual:',p.leave.annual,q?q.leave.annual:MISSING,currentEmployee.leave?.annual ?? null,previousEmployee?.leave?.annual ?? null),
+    pairRow('Grace:',p.leave.grace,q?q.leave.grace:MISSING,currentEmployee.leave?.grace ?? null,previousEmployee?.leave?.grace ?? null),
+    pairRow('Access:',p.leave.access,q?q.leave.access:MISSING,currentEmployee.leave?.access ?? null,previousEmployee?.leave?.access ?? null),
+    pairRow('Leave Days Due:',p.leave.due,q?q.leave.due:MISSING,currentEmployee.leave?.due ?? null,previousEmployee?.leave?.due ?? null)
   ]);
   keyValueBox(margin+(tableW+gap)*2,bottomTop,tableW,bottomH,'CLOCKED HOURS',[
     pairRow('Normal:',p.clocked.normal,q?q.clocked.normal:MISSING,currentEmployee.clocked.normal,previousEmployee?.clocked.normal ?? null),
@@ -1406,7 +1428,12 @@ function showApplicationError(message) {
   else setStatus(`Application error: ${message}`,'error');
 }
 
+function applyVersionLabels() {
+  document.querySelectorAll('[data-app-version]').forEach(el => { el.textContent = `v${VERSION}`; });
+}
+
 function initBrowser() {
+  applyVersionLabels();
   initTabs();
   loadComparisonThreshold();
   window.addEventListener('error', event => {
@@ -1470,7 +1497,7 @@ function initBrowser() {
   window.addEventListener('appinstalled',()=>{ deferredInstallPrompt=null; $('installBtn').classList.add('hidden'); });
 
   if ('serviceWorker' in navigator && (location.protocol==='https:' || location.hostname==='localhost' || location.hostname==='127.0.0.1')) {
-    navigator.serviceWorker.register('./service-worker.js').catch(err=>console.warn('Service worker registration failed',err));
+    navigator.serviceWorker.register('./service-worker.js').then(reg => reg.update()).catch(err=>console.warn('Service worker registration failed',err));
   }
 }
 

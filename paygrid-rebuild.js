@@ -1,7 +1,7 @@
 (() => {
   'use strict';
-  const CATEGORIES = ["MANDATORY", "T/A", "T/A", "T/A", "T/A", "T/A", "T/A", "T/A", "T/A", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "REIMBURSEMENTS", "REIMBURSEMENTS", "REIMBURSEMENTS", "REIMBURSEMENTS", "REIMBURSEMENTS", "REIMBURSEMENTS", "REIMBURSEMENTS", "GROSS PAYMENT", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "NETT SALARY", "FRINGE BENEFITS", "FRINGE BENEFITS", "FRINGE BENEFITS", "FRINGE BENEFITS", "FRINGE BENEFITS", "FRINGE BENEFITS", "FRINGE BENEFITS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COST TO COMPANY"];
-  const HEADERS = ["EMP Name", "Normal", "Sunday", "Off Day", "Overtime", "Overtime 2", "Holiday", "Nightshift", "Total Hours", "PAY RATE", "NORMAL PAY", "SUNDAY PAY", "E-REFUND NON-TAXABLE", "OVERTIME", "PUBLIC HOLIDAY", "NIGHT SHIFT PAY", "TOTAL PAY", "E-UNPAID LEAVE", "E-OVERTIME MANUAL", "E-COMMISION", "E-ONCE OFF COMMISSION", "E-ANNUAL BONUS", "E-LEAVE PAYOUT", "E-BACK PAY", "E-UNIF ALLOWANCE", "E-COMPUTER ALLOWANCE", "E-SANLAM CORRECTION", "E-GROCERY ALLOWANCE", "E-CASUAL WAGES", "E-CASHIER ALLOWANCE", "E-SALARY OVERPAID (-)", "E-SALARY SHORT PAID", "E-SPAR2U TIPS", "E-LEARNER STIPENDS", "E-BACKPAY", "E-REFUND", "E-SHARE OPTIONS", "E-MEDICAL AID ALLOWANCE", "E-EXEMPT POLICY PROCEEDS", "E-LOAN PAYMENT", "E-INCENTIVE", "E-NOTICE PAY", "E-TAKE ON DEDUCTION (-)", "E-TAKE ON EARNING", "E-TILL SHORTAGE REFUND NEGATIVE", "E-SNR CASHIER ALLOWANCE", "Total Earnings", "R-TRAVEL ALLOWANCE", "R-TRAVEL REIMBURSEMENT", "R-EXPENSE CLAIM (NON TAXABLE)", "R-SUBS ALLOWANCE LOCAL", "R-SUBS ALLOWANCE INTERNATIONAL", "R-EXPENSE CLAIM", "Total Reimbursements", "Total Gross Payment", "D-SARS ITA88", "D-GROCERY EXCESS", "D-GROCERY ALLOWANCE DEDUCTION", "D-SAFE SHORTS DEDUCTION", "D-PETROL EXCESS DEDUCTION", "D-NOTICE PAY DEDUCTION", "D-PROVIDENT R&A RISK CALC", "D-3PTY", "D-CIKISWA LOBESE", "D-MAGISTRATE", "D-J.P. MCGLASHAN", "D-J.P. MCGLASHAN WATER", "D-FUNERAL R&A EXT FAMILY", "\tD-SANLAM G July", "D-OTHER RECOVERY LOAN", "D-STAFF MEALS", "D-SANLAM (G-4000)", "D-SANLAM (G-1500)", "D-SANLAM (G-500)", "D-SANLAM (G-1000)", "D-TILL SHORTAGE", "D-MAINTENANCE ORDER", "D-GARNISHEE", "UIF", "D-ADVANCE", "D-LOAN", "D-UNIFORM 1", "D-UNIFORM 2", "D-STAFF LOAN", "D-OTHER RECOVERY", "D-TILL SHORTAGES LOAN", "D-UNION", "D-R&A FUNERAL", "D-R&A AVBOB", "D-R&A", "D-SANLAM (G-3000)", "D-SANLAM", "D-RETIREMENT ANNUITY", "D-MEDICAL", "D-PENSION", "D-DONATIONS", "D-FUNERAL DEDUCTION", "D-CASHIER DEDUCTION", "PAYE", "D-VOLUNTARY OVER DEDUCTION", "Total Deductions/Contributions", "Nett Salary", "FB-GAP COVER", "FB-MEDICAL (DO NOT USE)", "FB-RELEASE FROM DEBIT", "FB-USE OF AN ASSET", "FB-ACCOMMODATION BENEFIT", "FB-INTEREST ON LOAN", "Total Fringe Benefits", "CC-PROVIDENT R&A", "CC-PROV FUND R&A AVBOB", "CC-PROVIDENT R&A FUNERAL", "CC-SANLAM (G-3000)", "CC-SANLAM", "\tD-SANLAM G July", "CC-SANLAM (G-4000)", "CC-SANLAM (G-1500)", "CC-SANLAM (G-500)", "CC-SANLAM (G-1000)", "SDL", "UIF", "CC-MEDICAL", "CC-UNION", "CC-PENSION", "CC-RETIREMENT ANNUITY", "Total Company Contributions", "Cost to Company"];
+  const CATEGORIES = ["MANDATORY", "T/A", "T/A", "T/A", "T/A", "T/A", "T/A", "T/A", "T/A", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "EARNINGS", "REIMBURSEMENTS", "REIMBURSEMENTS", "REIMBURSEMENTS", "REIMBURSEMENTS", "REIMBURSEMENTS", "REIMBURSEMENTS", "REIMBURSEMENTS", "GROSS PAYMENT", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "DEDUCTIONS", "NETT SALARY", "FRINGE BENEFITS", "FRINGE BENEFITS", "FRINGE BENEFITS", "FRINGE BENEFITS", "FRINGE BENEFITS", "FRINGE BENEFITS", "FRINGE BENEFITS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COMPANY CONTRIBUTIONS", "COST TO COMPANY", "XPAYLO", "XPAYLO", "XPAYLO", "XPAYLO", "XPAYLO", "XPAYLO", "XPAYLO"];
+  const HEADERS = ["EMP Name", "Normal", "Sunday", "Off Day", "Overtime", "Overtime 2", "Holiday", "Nightshift", "Total Hours", "PAY RATE", "NORMAL PAY", "SUNDAY PAY", "E-REFUND NON-TAXABLE", "OVERTIME", "PUBLIC HOLIDAY", "NIGHT SHIFT PAY", "TOTAL PAY", "E-UNPAID LEAVE", "E-OVERTIME MANUAL", "E-COMMISION", "E-ONCE OFF COMMISSION", "E-ANNUAL BONUS", "E-LEAVE PAYOUT", "E-BACK PAY", "E-UNIF ALLOWANCE", "E-COMPUTER ALLOWANCE", "E-SANLAM CORRECTION", "E-GROCERY ALLOWANCE", "E-CASUAL WAGES", "E-CASHIER ALLOWANCE", "E-SALARY OVERPAID (-)", "E-SALARY SHORT PAID", "E-SPAR2U TIPS", "E-LEARNER STIPENDS", "E-BACKPAY", "E-REFUND", "E-SHARE OPTIONS", "E-MEDICAL AID ALLOWANCE", "E-EXEMPT POLICY PROCEEDS", "E-LOAN PAYMENT", "E-INCENTIVE", "E-NOTICE PAY", "E-TAKE ON DEDUCTION (-)", "E-TAKE ON EARNING", "E-TILL SHORTAGE REFUND NEGATIVE", "E-SNR CASHIER ALLOWANCE", "Total Earnings", "R-TRAVEL ALLOWANCE", "R-TRAVEL REIMBURSEMENT", "R-EXPENSE CLAIM (NON TAXABLE)", "R-SUBS ALLOWANCE LOCAL", "R-SUBS ALLOWANCE INTERNATIONAL", "R-EXPENSE CLAIM", "Total Reimbursements", "Total Gross Payment", "D-SARS ITA88", "D-GROCERY EXCESS", "D-GROCERY ALLOWANCE DEDUCTION", "D-SAFE SHORTS DEDUCTION", "D-PETROL EXCESS DEDUCTION", "D-NOTICE PAY DEDUCTION", "D-PROVIDENT R&A RISK CALC", "D-3PTY", "D-CIKISWA LOBESE", "D-MAGISTRATE", "D-J.P. MCGLASHAN", "D-J.P. MCGLASHAN WATER", "D-FUNERAL R&A EXT FAMILY", "\tD-SANLAM G July", "D-OTHER RECOVERY LOAN", "D-STAFF MEALS", "D-SANLAM (G-4000)", "D-SANLAM (G-1500)", "D-SANLAM (G-500)", "D-SANLAM (G-1000)", "D-TILL SHORTAGE", "D-MAINTENANCE ORDER", "D-GARNISHEE", "UIF", "D-ADVANCE", "D-LOAN", "D-UNIFORM 1", "D-UNIFORM 2", "D-STAFF LOAN", "D-OTHER RECOVERY", "D-TILL SHORTAGES LOAN", "D-UNION", "D-R&A FUNERAL", "D-R&A AVBOB", "D-R&A", "D-SANLAM (G-3000)", "D-SANLAM", "D-RETIREMENT ANNUITY", "D-MEDICAL", "D-PENSION", "D-DONATIONS", "D-FUNERAL DEDUCTION", "D-CASHIER DEDUCTION", "PAYE", "D-VOLUNTARY OVER DEDUCTION", "Total Deductions/Contributions", "Nett Salary", "FB-GAP COVER", "FB-MEDICAL (DO NOT USE)", "FB-RELEASE FROM DEBIT", "FB-USE OF AN ASSET", "FB-ACCOMMODATION BENEFIT", "FB-INTEREST ON LOAN", "Total Fringe Benefits", "CC-PROVIDENT R&A", "CC-PROV FUND R&A AVBOB", "CC-PROVIDENT R&A FUNERAL", "CC-SANLAM (G-3000)", "CC-SANLAM", "\tD-SANLAM G July", "CC-SANLAM (G-4000)", "CC-SANLAM (G-1500)", "CC-SANLAM (G-500)", "CC-SANLAM (G-1000)", "SDL", "UIF", "CC-MEDICAL", "CC-UNION", "CC-PENSION", "CC-RETIREMENT ANNUITY", "Total Company Contributions", "Cost to Company", "XPaylo YTD Taxable Earnings", "XPaylo YTD Perks", "XPaylo YTD Tax", "XPaylo Leave Annual", "XPaylo Leave Grace", "XPaylo Leave Access", "XPaylo Leave Days Due"];
   const byId = id => document.getElementById(id);
   const money = v => Number.isFinite(v) ? v.toLocaleString('en-ZA', {minimumFractionDigits:2, maximumFractionDigits:2}) : '####';
   const norm = v => String(v ?? '').replace(/\s+/g,' ').trim().toUpperCase();
@@ -130,31 +130,78 @@
   }
   function periodDate(lines){for(const l of lines){let m=l.text.match(/(?:Pay slip|Period EndDate)\s*:?[ ]*(\d{1,2}[ -][A-Za-z]{3}[ -]\d{4})/i); if(m)return m[1];}return null;}
   function dateInfo(s){if(!s)return {month:'',year:'',taxYear:''}; const m=s.match(/(\d{1,2})[ -]([A-Za-z]{3})[ -](\d{4})/); if(!m)return {month:'',year:'',taxYear:''}; const d=new Date(`${m[2]} ${m[1]}, ${m[3]}`); const month=d.toLocaleString('en',{month:'long'}); const y=Number(m[3]); return {month,year:y,taxYear:d.getMonth()+1>=2?y+1:y};}
-  function section(lines,name,nextNames){const start=lines.findIndex(l=>compact(l.text).startsWith(compact(name))); if(start<0)return []; let end=lines.length; for(const nn of nextNames){const j=lines.findIndex((l,i)=>i>start&&compact(l.text).startsWith(compact(nn))); if(j>=0&&j<end)end=j;} return lines.slice(start+1,end);}
+  const SECTION_BOUNDARIES=['EARNINGS','DEDUCTIONS','COMPANY CONTRIBUTIONS','Nett Pay:','YEAR-TO-DATE TOTALS','LEAVE DETAILS','CLOCKED HOURS','Normal Pay Breakdown','Employee Balances'];
+  function section(lines,name,nextNames=[]){
+    const start=lines.findIndex(l=>compact(l.text).startsWith(compact(name)));
+    if(start<0)return [];
+    let end=lines.length;
+    const boundaries=[...new Set([...SECTION_BOUNDARIES,...nextNames])].filter(v=>compact(v)!==compact(name));
+    for(const nn of boundaries){
+      const j=lines.findIndex((l,i)=>i>start&&compact(l.text).startsWith(compact(nn)));
+      if(j>=0&&j<end)end=j;
+    }
+    return lines.slice(start+1,end);
+  }
   function rightNumber(line,xMin=0,xMax=1e9){const cs=line.items.filter(i=>i.x>=xMin&&i.x<=xMax&&num(i.text)!=null).sort((a,b)=>b.x-a.x); return cs.length?num(cs[0].text):null;}
   function leftDescription(line,xMax=380){return line.items.filter(i=>i.x<xMax&&num(i.text)==null).map(i=>i.text.trim()).join(' ').replace(/\s+/g,' ').trim();}
   const ranges={earn:[10,46],reim:[47,53],ded:[55,100],fb:[102,108],cc:[109,125]};
-  function mapRange(desc,range){const k=cleanKey(desc); let exact=null; for(let i=range[0];i<=range[1];i++){const hk=cleanKey(HEADERS[i]); if(hk===k)exact=i;} return exact;}
+  const extraIndex={
+    ytdTaxable:127,ytdPerks:128,ytdTax:129,
+    leaveAnnual:130,leaveGrace:131,leaveAccess:132,leaveDue:133
+  };
+  const PAYSLIP_KEY_ALIASES={
+    'LOANUNIFORM1':'UNIFORM1',
+    'LOANUNIFORM2':'UNIFORM2',
+    'DLOANUNIFORM1':'UNIFORM1',
+    'DLOANUNIFORM2':'UNIFORM2'
+  };
+  function mapRange(desc,range){
+    let k=cleanKey(desc);
+    k=PAYSLIP_KEY_ALIASES[k]||k;
+    let exact=null;
+    for(let i=range[0];i<=range[1];i++){
+      let hk=cleanKey(HEADERS[i]); hk=PAYSLIP_KEY_ALIASES[hk]||hk;
+      if(hk===k)exact=i;
+    }
+    return exact;
+  }
   function parsePayslipPage(items,pageNo){
-    const lines=linesFromItems(items), row=Array(127).fill(null), warnings=[];
+    const lines=linesFromItems(items), row=Array(HEADERS.length).fill(null), warnings=[];
     const code=cleanEmployeeCode(fieldFromLines(lines,'Employee Code')); const name=cleanEmployeeName(fieldFromLines(lines,'Employee Name')); const pdate=periodDate(lines);
     if(name&&code)row[0]=`${name} (${code})`;
-    const rate=nearestValue(items,'Rate:',100); if(rate!=null)row[9]=rate;
+    // Some payslips print both a monthly Rate and a separate Hourly Rate. PAY RATE in the
+    // Pay Grid must use Hourly Rate when present; otherwise fall back to the legacy Rate field.
+    const hourlyRate=nearestValue(items,'Hourly Rate:',0);
+    const legacyRate=nearestValue(items,'Rate:',0);
+    const rate=hourlyRate!=null?hourlyRate:legacyRate;
+    if(rate!=null)row[9]=rate;
+    // Preserve printed YTD and leave values in XPaylo extension columns so a rebuilt grid can
+    // be used as the previous month in Payslip Comparison without losing those figures.
+    row[extraIndex.ytdTaxable]=nearestValue(items,'Taxable Earnings:',0);
+    row[extraIndex.ytdPerks]=nearestValue(items,'Perks:',0);
+    row[extraIndex.ytdTax]=nearestValue(items,'Tax:',0);
+    row[extraIndex.leaveAnnual]=nearestValue(items,'Annual:',0);
+    row[extraIndex.leaveGrace]=nearestValue(items,'Grace:',0);
+    row[extraIndex.leaveAccess]=nearestValue(items,'Access:',0);
+    row[extraIndex.leaveDue]=nearestValue(items,'Leave Days Due:',0);
     const clockMap={'NORMAL':1,'SUNDAY':2,'OFF DAY':3,'OVERTIME':4,'HOLIDAY':6,'NIGHTSHIFT':7,'TOTAL HOURS':8};
     let clockFound=false;
     for(const [lab,idx] of Object.entries(clockMap)){const v=nearestValue(items,lab+':',480); if(v!=null){row[idx]=v;clockFound=true;}}
     row[5]=null; // Overtime 2 is not separately printed.
 
     const earn=section(lines,'EARNINGS',['DEDUCTIONS','COMPANY CONTRIBUTIONS','Nett Pay:','YEAR-TO-DATE TOTALS']); let earnTotal=null;
-    for(const l of earn){const d=leftDescription(l); if(!d)continue; if(norm(d)==='HOURS')continue; if(norm(d)==='TOTAL'){earnTotal=rightNumber(l,480);continue;} const idx=mapRange(d,ranges.earn); if(idx!=null){const amt=rightNumber(l,480); if(amt!=null)row[idx]=amt;}}
+    for(const l of earn){const d=leftDescription(l); if(!d)continue; if(norm(d)==='HOURS')continue; if(norm(d)==='TOTAL'){earnTotal=rightNumber(l,0);continue;} const idx=mapRange(d,ranges.earn); if(idx!=null){const amt=rightNumber(l,0); if(amt!=null)row[idx]=amt;}}
+    if(earnTotal==null){const vals=[];for(let i=ranges.earn[0];i<ranges.earn[1];i++)if(Number.isFinite(row[i])&&i!==16)vals.push(row[i]); if(vals.length)earnTotal=vals.reduce((a,b)=>a+b,0);}
     if(earnTotal!=null){row[16]=earnTotal;row[46]=earnTotal;row[54]=earnTotal;}
 
     const ded=section(lines,'DEDUCTIONS',['COMPANY CONTRIBUTIONS','Nett Pay:','YEAR-TO-DATE TOTALS']); let dedTotal=null;
-    for(const l of ded){const d=leftDescription(l); if(!d)continue; if(norm(d)==='TOTAL'){dedTotal=rightNumber(l,450);continue;} const idx=mapRange(d,ranges.ded); if(idx!=null){const v=rightNumber(l,450);if(v!=null)row[idx]=v;}}
+    for(const l of ded){const d=leftDescription(l); if(!d)continue; if(norm(d)==='TOTAL'){dedTotal=rightNumber(l,0);continue;} const idx=mapRange(d,ranges.ded); if(idx!=null){const v=rightNumber(l,0);if(v!=null)row[idx]=v;}}
+    if(dedTotal==null){const vals=[];for(let i=ranges.ded[0];i<ranges.ded[1];i++)if(Number.isFinite(row[i]))vals.push(row[i]); if(vals.length)dedTotal=vals.reduce((a,b)=>a+b,0);}
     if(dedTotal!=null)row[100]=dedTotal;
 
     const cc=section(lines,'COMPANY CONTRIBUTIONS',['Nett Pay:','YEAR-TO-DATE TOTALS']); let ccTotal=null;
-    for(const l of cc){const d=leftDescription(l); if(!d)continue; if(norm(d)==='TOTAL'){ccTotal=rightNumber(l,450);continue;} const idx=mapRange(d,ranges.cc); if(idx!=null){const v=rightNumber(l,450);if(v!=null)row[idx]=v;}}
+    for(const l of cc){const d=leftDescription(l); if(!d)continue; if(norm(d)==='TOTAL'){ccTotal=rightNumber(l,0);continue;} const idx=mapRange(d,ranges.cc); if(idx!=null){const v=rightNumber(l,0);if(v!=null)row[idx]=v;}}
+    if(ccTotal==null){const vals=[];for(let i=ranges.cc[0];i<ranges.cc[1];i++)if(Number.isFinite(row[i]))vals.push(row[i]); if(vals.length)ccTotal=vals.reduce((a,b)=>a+b,0);}
     if(ccTotal!=null)row[125]=ccTotal;
 
     const net=nearestValue(items,'Nett Pay:',450); if(net!=null)row[101]=net;
@@ -224,7 +271,7 @@
       if(code){
         let group=byCode.get(code);
         if(!group){
-          group={page:String(part.page),pages:[],name:part.name||'',code:part.code||'',period:part.period||'',row:Array(127).fill(null),warnings:[],sections:{earn:false,ded:false,cc:false,clock:false},hasPayrollContent:false,status:'partial'};
+          group={page:String(part.page),pages:[],name:part.name||'',code:part.code||'',period:part.period||'',row:Array(HEADERS.length).fill(null),warnings:[],sections:{earn:false,ded:false,cc:false,clock:false},hasPayrollContent:false,status:'partial'};
           groups.push(group); byCode.set(code,group);
         } else if(current!==group){
           group.warnings.push(`Page ${part.page} repeated employee code ${part.code} non-consecutively and was merged with the earlier pages for that employee.`);
@@ -251,9 +298,9 @@
   function workbookBlob(records){
     const first=records.find(r=>r.period)?.period||''; const di=dateInfo(first); const rows=[];
     rows[1]=['Cycle Details',`Monthly ( ${di.month||'Unknown'} )  Tax Year : ${di.taxYear||''}`]; rows[2]=['Tax Year :',di.taxYear||'']; rows[3]=['Employee Type :','ALL']; rows[4]=['Department :','All']; rows[5]=['Time & Attendance: Lock Date :',null]; rows[6]=['Contract Type :','Employee Contract Hours']; rows[8]=CATEGORIES; rows[9]=['PREVIOUS TOTALS']; rows[11]=HEADERS;
-    const data=records.filter(r=>r.status!=='failed'&&r.selected!==false).map(r=>r.row); const totals=Array(127).fill(null); totals[0]='TOTALS'; for(let c=1;c<127;c++){let any=false,s=0; for(const r of data)if(Number.isFinite(r[c])){s+=r[c];any=true;} totals[c]=any?s:null;} rows[10]=totals; data.forEach((r,i)=>rows[12+i]=r);
-    let sheet=''; const maxRow=11+data.length; for(let r=1;r<=maxRow;r++){const vals=rows[r]||[]; let cs=''; for(let c=1;c<=127;c++)cs+=cellXml(r,c,vals[c-1],r===8||r===11?1:0); sheet+=`<row r="${r}">${cs}</row>`;}
-    const ws=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><dimension ref="A1:DW${maxRow}"/><sheetViews><sheetView workbookViewId="0"/></sheetViews><sheetFormatPr defaultRowHeight="15"/><sheetData>${sheet}</sheetData></worksheet>`;
+    const data=records.filter(r=>r.status!=='failed'&&r.selected!==false).map(r=>r.row); const totals=Array(HEADERS.length).fill(null); totals[0]='TOTALS'; for(let c=1;c<127;c++){let any=false,s=0; for(const r of data)if(Number.isFinite(r[c])){s+=r[c];any=true;} totals[c]=any?s:null;} rows[10]=totals; data.forEach((r,i)=>rows[12+i]=r);
+    let sheet=''; const maxRow=11+data.length; for(let r=1;r<=maxRow;r++){const vals=rows[r]||[]; let cs=''; for(let c=1;c<=HEADERS.length;c++)cs+=cellXml(r,c,vals[c-1],r===8||r===11?1:0); sheet+=`<row r="${r}">${cs}</row>`;}
+    const ws=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><dimension ref="A1:${colName(HEADERS.length)}${maxRow}"/><sheetViews><sheetView workbookViewId="0"/></sheetViews><sheetFormatPr defaultRowHeight="15"/><sheetData>${sheet}</sheetData></worksheet>`;
     const files=[
       {name:'[Content_Types].xml',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>'},
       {name:'_rels/.rels',data:'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>'},

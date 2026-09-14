@@ -1,7 +1,9 @@
-const CACHE = 'xpaylo-for-eldon-v1.2.2';
+importScripts('./version.js');
+const CACHE = `xpaylo-for-eldon-v${self.XPAYLO_VERSION || 'dev'}`;
 const APP_SHELL = [
   './',
   './index.html',
+  './version.js',
   './styles.css',
   './app.js',
   './paygrid-rebuild.js',
@@ -22,6 +24,17 @@ self.addEventListener('activate', event => {
 });
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
+  const url = new URL(event.request.url);
+  const isNavigation = event.request.mode === 'navigate';
+  const isVersionedCore = /\/(?:index\.html|version\.js|app\.js|paygrid-rebuild\.js)$/.test(url.pathname);
+  if (isNavigation || isVersionedCore) {
+    event.respondWith(fetch(event.request).then(response => {
+      const copy = response.clone();
+      caches.open(CACHE).then(cache => cache.put(event.request, copy));
+      return response;
+    }).catch(() => caches.match(event.request).then(r => r || caches.match('./index.html'))));
+    return;
+  }
   event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
     const copy = response.clone();
     caches.open(CACHE).then(cache => cache.put(event.request, copy));

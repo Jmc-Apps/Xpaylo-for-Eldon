@@ -36,7 +36,7 @@
       </nav>
 
       <div class="sidebar-footer">
-        <span class="version-badge">v1.1.1</span>
+        <span class="version-badge" data-app-version>v1.2.3</span>
       </div>
     </aside>
 
@@ -296,7 +296,7 @@
             <div class="section-heading generate-heading">
               <div>
                 <h2>3. Export rebuilt Pay Grid</h2>
-                <p>The exported workbook uses the same 127 Pay Grid columns used by XPaylo. Printed values are reconstructed; values that cannot be recovered reliably are left blank.</p>
+                <p>The exported workbook keeps the original 127 Pay Grid columns and adds XPaylo comparison fields for printed YTD and leave values. Values that cannot be recovered reliably are left blank.</p>
               </div>
               <button id="downloadPayGridBtn" class="button button-primary button-large" type="button">Download Pay Grid XLSX</button>
             </div>
@@ -308,11 +308,12 @@
       </main>
 
       <footer>
-        XPaylo for Eldon v1.2.0 · Offline-capable PWA · Payroll data stays on this device
+        XPaylo for Eldon · Offline-capable PWA · Payroll data stays on this device
       </footer>
     </div>
   </div>
 
+  <script defer src="version.js"></script>
   <script defer src="pako_inflate.min.js"></script>
   <script defer src="paygrid-rebuild.js"></script>
   <script defer src="app.js"></script>

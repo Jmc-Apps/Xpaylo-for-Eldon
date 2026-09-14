@@ -1,0 +1,1 @@
+globalThis.XPAYLO_VERSION = '1.2.3';
