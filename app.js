@@ -233,6 +233,24 @@ function cleanDescription(header) {
   return String(header || '').replace(/^\s+/, '').replace(/^(E-|R-|D-|CC-|FB-)/i, '').replace(/\s+/g, ' ').trim();
 }
 
+function canonicalDeductionDescription(header) {
+  const cleaned = cleanDescription(header);
+  const key = norm(cleaned);
+  if (key === 'LOAN UNIFORM 1' || key === 'UNIFORM 1') return 'UNIFORM 1';
+  if (key === 'LOAN UNIFORM 2' || key === 'UNIFORM 2') return 'UNIFORM 2';
+  return cleaned;
+}
+
+function basicSalaryValue(employee) {
+  if (!employee || !Number.isFinite(employee.payRate)) return null;
+  // Fixed-monthly employees can have PAY RATE equal to NORMAL PAY. In that case the
+  // rate already is the basic monthly salary and must not be multiplied by 195.
+  if (Number.isFinite(employee.normalPay) && Math.abs(employee.payRate - employee.normalPay) < 0.005) {
+    return employee.payRate;
+  }
+  return employee.payRate * 195;
+}
+
 function derivePeriod(rows, headerRow) {
   let cycleText = '';
   let lockText = '';
@@ -344,14 +362,34 @@ function extractPayroll(rows, sheetName) {
 
     const deductions = [];
     const allDeductions = Object.create(null);
+    const deductionRowsByKey = new Map();
     for (const col of columns) {
       if (norm(col.category) !== 'DEDUCTIONS') continue;
       if (norm(col.header) === 'TOTAL DEDUCTIONS/CONTRIBUTIONS') continue;
-      const key = `DEDUCTIONS|${norm(col.header)}`;
+      const description = canonicalDeductionDescription(col.header);
+      const key = `DEDUCTIONS|${norm(description)}`;
       const amount = toNumber(row.get(col.index));
-      allDeductions[key] = amount;
+
+      // A payroll export can call the same item either LOAN UNIFORM 1 or UNIFORM 1
+      // (and likewise for Uniform 2). Treat those aliases as one deduction rather
+      // than creating two comparison rows. Prefer the non-zero value when one alias
+      // is blank/zero and the other contains the actual deduction.
+      const existing = allDeductions[key];
+      if (!Number.isFinite(existing) || (!isNonZero(existing) && isNonZero(amount))) {
+        allDeductions[key] = amount;
+      }
       if (!isNonZero(amount)) continue;
-      deductions.push({ key, description: cleanDescription(col.header), amount, amountText: money(amount) });
+      if (!deductionRowsByKey.has(key)) {
+        const entry = { key, description, amount, amountText: money(amount) };
+        deductionRowsByKey.set(key, entry);
+        deductions.push(entry);
+      } else {
+        const entry = deductionRowsByKey.get(key);
+        if (!isNonZero(entry.amount) && isNonZero(amount)) {
+          entry.amount = amount;
+          entry.amountText = money(amount);
+        }
+      }
     }
 
     const company = [];
@@ -391,6 +429,7 @@ function extractPayroll(rows, sheetName) {
       companyTotal,
       nett,
       payRate: getNum('PAY RATE', 'EARNINGS'),
+      normalPay: getNum('NORMAL PAY', 'EARNINGS'),
       ytd: {
         taxableEarnings: getNum('XPaylo YTD Taxable Earnings'),
         perks: getNum('XPaylo YTD Perks'),
@@ -473,7 +512,7 @@ function payslipViewModel(employee, payroll) {
     companyTotalText: money(employee.companyTotal),
     nettText: money(employee.nett),
     payRateText: money(employee.payRate),
-    basicSalaryText: Number.isFinite(employee.payRate) ? money(employee.payRate * 195) : MISSING,
+    basicSalaryText: money(basicSalaryValue(employee)),
     ytd: {
       taxableEarnings: money(employee.ytd?.taxableEarnings),
       perks: money(employee.ytd?.perks),
@@ -846,8 +885,8 @@ function renderComparisonPreview(currentEmployee, previousEmployee, currentPayro
     changed: q ? exceedsThreshold(currentValue, previousValue, threshold) : false
   });
   const ratePrev = previousEmployee?.payRate ?? null;
-  const basicCurrent = Number.isFinite(currentEmployee?.payRate) ? currentEmployee.payRate * 195 : null;
-  const basicPrev = Number.isFinite(ratePrev) ? ratePrev * 195 : null;
+  const basicCurrent = basicSalaryValue(currentEmployee);
+  const basicPrev = basicSalaryValue(previousEmployee);
   const netChanged = q ? exceedsThreshold(currentEmployee.nett, previousEmployee.nett, threshold) : false;
 
   return `<div class="payslip-sheet comparison-sheet">
@@ -1049,8 +1088,8 @@ function pdfContentForComparison(currentEmployee, previousEmployee, currentPayro
     changed:previousEmployee?exceedsThreshold(currentValue,previousValue,threshold):false
   });
   const ratePrev = previousEmployee?.payRate ?? null;
-  const basicCurrent = Number.isFinite(currentEmployee?.payRate) ? currentEmployee.payRate*195 : null;
-  const basicPrev = Number.isFinite(ratePrev) ? ratePrev*195 : null;
+  const basicCurrent = basicSalaryValue(currentEmployee);
+  const basicPrev = basicSalaryValue(previousEmployee);
 
   const bottomTop=409, bottomH=171;
   keyValueBox(margin,bottomTop,tableW,bottomH,'YEAR-TO-DATE TOTALS',[
