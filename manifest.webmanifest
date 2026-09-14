@@ -2,7 +2,7 @@
   "id": "./",
   "name": "XPaylo for Eldon",
   "short_name": "XPaylo",
-  "description": "Generate and compare draft employee payslips from Excel payroll pay grids.",
+  "description": "Generate, compare and rebuild payroll pay grids from employee payslips.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

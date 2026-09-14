@@ -1,6 +1,6 @@
-# XPaylo for Eldon v1.1.1
+# XPaylo for Eldon v1.2.1
 
-Offline-capable PWA for producing draft payslips from the Eldon payroll pay grid.
+Offline-capable PWA for producing, comparing and reconstructing payroll pay grids and draft payslips.
 
 ## Payslip Generator
 - Upload an `.xlsx` payroll pay grid.
@@ -8,7 +8,7 @@ Offline-capable PWA for producing draft payslips from the Eldon payroll pay grid
 - Preview payslips.
 - Generate one combined A4 landscape PDF with one payslip per page.
 - Missing fields remain labelled and display `####`.
-- Basic Salary is calculated as Pay Rate x 195.
+- Basic Salary is calculated as Pay Rate × 195.
 - Every payslip has a DRAFT watermark.
 
 ## Payslip Comparison
@@ -21,11 +21,22 @@ Offline-capable PWA for producing draft payslips from the Eldon payroll pay grid
 - Missing prior-month values display `####` rather than being guessed.
 - Generate one combined A4 landscape PDF with one comparison payslip per page.
 
+## Payslip to Pay Grid
+- Upload a text-based PDF containing employee payslips.
+- Payslips may span one, two or more PDF pages.
+- Continuation pages are grouped by repeated employee code/name where possible.
+- If a continuation page does not repeat employee identification, XPaylo can group it with the immediately preceding payslip by position and flags the record for review.
+- Earnings, deductions, company contributions, nett pay, rate and clocked hours are mapped back into the known 127-column Pay Grid structure.
+- Values that cannot be reconstructed reliably are left blank rather than invented.
+- Ambiguous/conflicting page data is flagged for review.
+- Export the reconstructed payroll as an `.xlsx` file.
+
+## v1.2.1 changes
+- Added multi-page payslip support to Payslip to Pay Grid.
+- Continuation pages no longer become separate employees.
+- Review table now shows page ranges for each grouped payslip.
+- PDF page count and grouped payslip count are reported separately.
+- Updated offline cache/version metadata for the new converter files.
+
 ## Privacy
-Payroll workbooks are processed in the browser. XPaylo does not upload payroll data to a server.
-
-
-## v1.1.1 changes
-- Sidebar XPaylo logo is now twice the previous desktop size.
-- Removed the adjacent “XPaylo for Eldon” text from the sidebar; the logo is now the sole branding element there.
-- Refreshed the PWA icon files directly from the approved XPaylo logo and added a dedicated Apple touch icon so installed web apps use the XPaylo logo.
+Payroll workbooks and PDFs are processed in the browser. XPaylo does not upload payroll data to a server.

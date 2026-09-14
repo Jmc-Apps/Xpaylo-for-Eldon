@@ -29,6 +29,10 @@
           <span class="nav-icon" aria-hidden="true">⇄</span>
           <span class="nav-text">Payslip Comparison</span>
         </button>
+        <button class="nav-tab" type="button" data-tab="payslip-to-pay-grid" title="Payslip to Pay Grid">
+          <span class="nav-icon" aria-hidden="true">▦</span>
+          <span class="nav-text">Payslip to Pay Grid</span>
+        </button>
       </nav>
 
       <div class="sidebar-footer">
@@ -231,15 +235,86 @@
             </div>
           </section>
         </section>
+
+        <section class="tab-panel" data-tab-panel="payslip-to-pay-grid">
+          <section class="card upload-card">
+            <div>
+              <h2>1. Upload payslip PDF</h2>
+              <p>Choose a text-based PDF containing the payroll payslips. A payslip may span one or more pages; XPaylo groups continuation pages for the same employee and rebuilds the known Pay Grid columns from the information printed across the complete payslip.</p>
+            </div>
+            <label class="drop-zone" id="payslipPdfDropZone" for="payslipPdfInput">
+              <input id="payslipPdfInput" type="file" accept=".pdf,application/pdf" />
+              <span class="drop-icon">⇧</span>
+              <strong>Choose payslip PDF</strong>
+              <span>or drag and drop it here</span>
+            </label>
+            <div id="payslipPdfStatus" class="status neutral">No payslip PDF loaded.</div>
+          </section>
+
+          <section id="payGridRebuildSummaryCard" class="card hidden">
+            <div class="section-heading">
+              <div>
+                <h2>2. Review reconstructed employees</h2>
+                <p id="payGridRebuildMeta">Payslip reconstruction details</p>
+              </div>
+              <div class="toolbar">
+                <button id="payGridSelectAllBtn" class="button button-secondary" type="button">Select All</button>
+                <button id="payGridClearAllBtn" class="button button-secondary" type="button">Clear All</button>
+                <button id="clearPayGridRebuildBtn" class="button button-danger" type="button">Clear PDF</button>
+              </div>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat"><span>PDF pages</span><strong id="payGridPageCount">0</strong></div>
+              <div class="stat"><span>Ready</span><strong id="payGridReadyCount">0</strong></div>
+              <div class="stat"><span>Needs review</span><strong id="payGridWarningCount">0</strong></div>
+              <div class="stat"><span>Failed payslips</span><strong id="payGridFailedCount">0</strong></div>
+            </div>
+
+            <div class="table-wrap">
+              <table class="employee-table rebuild-table">
+                <thead>
+                  <tr>
+                    <th class="check-col"></th>
+                    <th>Pages</th>
+                    <th>Employee</th>
+                    <th>Code</th>
+                    <th class="num">Gross Pay</th>
+                    <th class="num">Deductions</th>
+                    <th class="num">Nett Pay</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="payGridRebuildRows"></tbody>
+              </table>
+            </div>
+
+            <div id="payGridRebuildWarnings" class="rebuild-warning-list hidden"></div>
+          </section>
+
+          <section id="payGridRebuildGenerateCard" class="card hidden">
+            <div class="section-heading generate-heading">
+              <div>
+                <h2>3. Export rebuilt Pay Grid</h2>
+                <p>The exported workbook uses the same 127 Pay Grid columns used by XPaylo. Printed values are reconstructed; values that cannot be recovered reliably are left blank.</p>
+              </div>
+              <button id="downloadPayGridBtn" class="button button-primary button-large" type="button">Download Pay Grid XLSX</button>
+            </div>
+            <div class="rules-note">
+              <strong>Reconstruction rule:</strong> XPaylo never invents a value. A known pay item that is absent from an otherwise readable payslip section is recorded as 0.00, while information that the payslip does not expose separately is left blank and flagged where relevant.
+            </div>
+          </section>
+        </section>
       </main>
 
       <footer>
-        XPaylo for Eldon v1.1.0 · Offline-capable PWA · Payroll data stays on this device
+        XPaylo for Eldon v1.2.1 · Offline-capable PWA · Payroll data stays on this device
       </footer>
     </div>
   </div>
 
   <script defer src="pako_inflate.min.js"></script>
+  <script defer src="paygrid-rebuild.js"></script>
   <script defer src="app.js"></script>
 </body>
 </html>

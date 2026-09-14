@@ -1,9 +1,10 @@
-const CACHE = 'xpaylo-for-eldon-v1.1.1';
+const CACHE = 'xpaylo-for-eldon-v1.2.1';
 const APP_SHELL = [
   './',
   './index.html',
   './styles.css',
   './app.js',
+  './paygrid-rebuild.js',
   './pako_inflate.min.js',
   './PAKO-LICENSE.txt',
   './manifest.webmanifest',
